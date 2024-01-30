@@ -2,20 +2,19 @@
 . "$(dirname -- "$0")/_/husky.sh"
 npm run format 
 npm test
-git add -A .
+# git add -A .
 
-LC_ALL=C
+# Check branch naming
+current_branch=$(git symbolic-ref --short HEAD)
+branch_pattern="^(feature|bugfix|hotfix)\/[a-zA-Z0-9_-]+$"
 
-local_branch="$(git rev-parse --abbrev-ref HEAD)"
-
-valid_branch_regex="^(feature|bugfix|improvement|library|prerelease|release|hotfix)\/[a-z0-9._-]+$"
-
-message="There is something wrong with your branch name. Branch names in this project must adhere to this contract: $valid_branch_regex. Your commit will be rejected. You should rename your branch to a valid name and try again."
-
-if [[ ! $local_branch =~ $valid_branch_regex ]]
-then
-    echo "$message"
-    exit 1
+if ! [[ "$current_branch" =~ $branch_pattern ]]; then
+  echo "Error: Invalid branch name. Branch names must match the pattern: $branch_pattern"
+  exit 1
 fi
 
-exit 0
+
+
+
+
+git add -A .
